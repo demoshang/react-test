@@ -1,26 +1,69 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+
+/**
+#10 React.js 加载、刷新数据
+完成 Post 组件，它可以加载、刷新文章内容。
+已有函数 getPostData，它会返回一个 Promise，你可以通过它获取文章的内容。
+```
+getPostData().then((postContent) => {
+  // ...
+})
+```
+在获取数据的时候，Post 组件的 div.post-content 中显示 数据加载中...，完成加载以后直接显示 getPostData 的返回结果。
+页面有个按钮，点击可以重新加载数据。
+*/
+
+async function delay(timeout: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeout)
+  })
+}
+
+async function getPostData() {
+  await delay(1000);
+
+  return 'asdasdasdasd'
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Post></Post>
+  )
+}
+
+class Post extends Component<any, any> {
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      content: '数据加载中...',
+    }
+  }
+
+  async componentWillMount() {
+    await this.load();
+  }
+
+  private async load() {
+    this.setState({content: '数据加载中...' })
+    const content = await getPostData();
+    this.setState({content: content})
+  }
+
+  render() {
+    return (
+     <div>
+        <div className="post-content">
+        {this.state.content}
+      </div>
+
+      <div>
+        <button onClick={this.load.bind(this)}>获取</button>
+      </div>
+     </div>
+    )
+  }
+
 }
 
 export default App;

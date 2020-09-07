@@ -7,48 +7,61 @@ async function delay(timeout: number) {
 }
 
 function App() {
+  const Post = getDefaultStyledPost({ color: 'red' })
   return (
-    <Post content="完成 Post 组件，接受一个字符串的 content 作为 props，Post 会把它显示到自己的 <p> 元素内。"></Post>
+    <div>
+      <Post style={{ color: 'blue', fontSize: '13px' }}></Post>
+      <Post style={{ fontSize: '20px' }} />
+    </div>
   )
 }
 
 
 /**
-#11 获取文本的高度
-完成 Post 组件，接受一个字符串的 content 作为 props，Post 会把它显示到自己的 <p> 元素内。
-并且，点击 <p> 元素的时候，会使用 console.log 把元素的高度打印出来。
+#12 覆盖默认样式
+完成一个函数 getDefaultStyledPost，这个函数接受一个表示样式的对象作为参数，返回一个组件只有 <p> 元素的组件：
+const Post = getDefaultStyledPost({ color: 'red' })
+<Post /> // <p>任意内容</p>，颜色为红色
+渲染出来的 <p> 元素要具有 getDefaultStyledPost 所接受对象所表示的样式。此外，返回的 Post 组件还要能够接受一个 style 对象作为 props，这个对象会和原来的样式进行合并显示：
+const Post = getDefaultStyledPost({ color: 'red' })
+<Post style={{ color: 'blue', fontSize: '13px' }} />
+<Post style={{ fontSize: '12px' }} />
+
+
+上面第一个 <Post /> 渲染结果为：颜色为蓝色，字体大小为 13px。
+上面第二个 <Post /> 渲染结果为：颜色为红色，字体大小为 12px。
 */
 
-class Post extends Component<any, any> {
-
-  p:HTMLParagraphElement | null = null;
-
-  constructor(props: any) {
-    super(props);
-
-    this.state = {
-      content: '数据加载中...',
+function getDefaultStyledPost(style = {}) {
+  class Post extends Component<any, any> {
+    // constructor(props: any) {
+    //   super(props);
+    // }
+   
+    render() {
+      return (
+        <p style={{...style, ...this.props.style}}>任意内容</p>
+      )
     }
+  
   }
 
-  showHeight() {
-    if(!this.p) {
-      return;
-    }
-
-    console.info(this.p.clientHeight)
-  }
- 
-  render() {
-    return (
-    <p ref={(p) => {
-      this.p = p;
-    }} onClick={this.showHeight.bind(this)}>
-      {this.props.content}
-    </p>
-    )
-  }
-
+  return Post;
 }
+
+// class Post extends Component<any, any> {
+//   constructor(props: any) {
+//     super(props);
+
+//   }
+
+ 
+//   render() {
+//     return (
+//       <p style={this.props.style}>任意内容</p>
+//     )
+//   }
+
+// }
 
 export default App;

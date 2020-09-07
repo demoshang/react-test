@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './App.css';
 
 async function delay(timeout: number) {
   return new Promise((resolve) => {
@@ -7,47 +8,46 @@ async function delay(timeout: number) {
 }
 
 function App() {
-  const Post = getDefaultStyledPost({ color: 'red' })
   return (
-    <div>
-      <Post style={{ color: 'blue', fontSize: '13px' }}></Post>
-      <Post style={{ fontSize: '20px' }} />
-    </div>
+    <BlackBorderContainer>
+    <div className='name'>My Name：Lucy</div>
+    <p className='age'>
+      My Age：<span>12</span>
+    </p>
+  </BlackBorderContainer>
   )
 }
 
 
 /**
-#12 覆盖默认样式
-完成一个函数 getDefaultStyledPost，这个函数接受一个表示样式的对象作为参数，返回一个组件只有 <p> 元素的组件：
-const Post = getDefaultStyledPost({ color: 'red' })
-<Post /> // <p>任意内容</p>，颜色为红色
-渲染出来的 <p> 元素要具有 getDefaultStyledPost 所接受对象所表示的样式。此外，返回的 Post 组件还要能够接受一个 style 对象作为 props，这个对象会和原来的样式进行合并显示：
-const Post = getDefaultStyledPost({ color: 'red' })
-<Post style={{ color: 'blue', fontSize: '13px' }} />
-<Post style={{ fontSize: '12px' }} />
+#13 黑色边框的容器组件
+实现一个组件 BlackBorderContainer，它会把作为它的嵌套结构的 每个直接子元素 都用一个黑色边框的 div 包裹起来。例如：
+```
+<BlackBorderContainer>
+  <div className='name'>My Name：Lucy</div>
+  <p className='age'>
+    My Age：<span>12</span>
+  </p>
+</BlackBorderContainer>
+```
+最后的 div.name 和 p.age 都具有一层黑色边框（1px solid #000000）外层结构。
+ */
 
-
-上面第一个 <Post /> 渲染结果为：颜色为蓝色，字体大小为 13px。
-上面第二个 <Post /> 渲染结果为：颜色为红色，字体大小为 12px。
-*/
-
-function getDefaultStyledPost(style = {}) {
-  class Post extends Component<any, any> {
-    // constructor(props: any) {
-    //   super(props);
-    // }
-   
-    render() {
-      return (
-        <p style={{...style, ...this.props.style}}>任意内容</p>
-      )
-    }
-  
-  }
-
-  return Post;
-}
+ class BlackBorderContainer extends Component<any, any> {
+   render() {
+     return (
+     <div>
+       {(this.props.children as any).map((ele: any) => {
+         return (
+           <div className="black-container">
+             {ele}
+           </div>
+         )
+       })}
+     </div>
+     )
+   }
+ }
 
 // class Post extends Component<any, any> {
 //   constructor(props: any) {
